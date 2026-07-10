@@ -11,7 +11,7 @@
   <!-- Google Fonts: Inter para tipografía técnica y limpia -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght=300;400;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
   
   <!-- Carga de React 18 & ReactDOM 18 UMD (Producción) -->
   <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
@@ -162,7 +162,11 @@
     const Header = ({ view, setView, setSelectedProject, setMenuOpen, logoUrl, t, lang, setLang }) => (
       <header className="fixed top-0 left-0 w-full z-50 transition-all duration-500 bg-white/90 border-b border-neutral-200 backdrop-blur-md px-6 py-4 flex justify-between items-center select-none">
         <div className="flex items-center cursor-pointer" onClick={() => { setView('home'); if (setSelectedProject) setSelectedProject(null); setMenuOpen(false); window.scrollTo(0,0); }}>
-          <img src={logoUrl} alt="Aberración Óptica" className="h-8 md:h-10 w-auto object-contain" />
+          <img 
+            src={logoUrl} 
+            alt={lang === 'es' ? "Logotipo de Aberración Óptica - Productora Audiovisual y Renta de Equipo" : "Aberración Óptica Logo - Film Production and Equipment Rental"} 
+            className="h-8 md:h-10 w-auto object-contain" 
+          />
         </div>
         
         <div className="flex items-center space-x-6 uppercase font-bold text-[10px] tracking-[0.3em]">
@@ -234,14 +238,18 @@
       </div>
     );
 
-    const NavigationOverlay = ({ menuOpen, setMenuOpen, setView, logoUrl, t, setSitemapOpen }) => (
+    const NavigationOverlay = ({ menuOpen, setMenuOpen, setView, logoUrl, t, setSitemapOpen, lang }) => (
       <div 
         style={{ display: menuOpen ? 'block' : 'none' }}
         className={`fixed inset-0 bg-white z-[200] transition-all duration-700 ease-in-out ${menuOpen ? 'translate-y-0 opacity-100 visible pointer-events-auto' : '-translate-y-full opacity-0 invisible pointer-events-none'}`}
       >
         <div className="h-full flex flex-col p-8 md:p-16 overflow-y-auto uppercase text-black font-sans">
           <div className="flex justify-between items-center mb-12">
-            <img src={logoUrl} alt="Aberración Óptica" className="h-8 md:h-10 w-auto object-contain" />
+            <img 
+              src={logoUrl} 
+              alt={lang === 'es' ? "Logotipo de Aberración Óptica" : "Aberración Óptica Logo"} 
+              className="h-8 md:h-10 w-auto object-contain" 
+            />
             <button onClick={() => setMenuOpen(false)} className="p-3 hover:bg-neutral-100 rounded-full transition-colors">
               <CloseIcon size={24} />
             </button>
@@ -285,7 +293,7 @@
       </div>
     );
 
-    const CategoryListView = ({ type, title, projects, setSelectedProject, setView, t }) => {
+    const CategoryListView = ({ type, title, projects, setSelectedProject, setView, t, lang }) => {
       const searchType = type.toUpperCase() === 'VIDEOCLIPS' ? 'VIDEOCLIP' : 
                          type === 'largos' ? 'LARGOMETRAJE' : 
                          type === 'cortos' ? 'CORTO' : 
@@ -312,7 +320,11 @@
                   onClick={() => { setSelectedProject(proj); setView('project'); window.scrollTo(0,0); }}
                 >
                   <div className="w-full aspect-[2/3] overflow-hidden bg-neutral-100 relative mb-6 rounded">
-                    <img src={proj.poster} className="w-full h-full object-cover transition-transform duration-[1.2s] group-hover:scale-105" alt={proj.title} />
+                    <img 
+                      src={proj.poster} 
+                      className="w-full h-full object-cover transition-transform duration-[1.2s] group-hover:scale-105" 
+                      alt={lang === 'es' ? `Póster de la producción cinematográfica: ${proj.title}` : `Official poster for the film: ${proj.title}`} 
+                    />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-500"></div>
                   </div>
                   <div className="text-left space-y-1">
@@ -328,7 +340,7 @@
       );
     };
 
-    const ProjectView = ({ project, galleryState, setGalleryState, setView, t }) => {
+    const ProjectView = ({ project, galleryState, setGalleryState, setView, t, lang }) => {
       const activeGallery = galleryState.index !== null ? (galleryState.type === 'stills' ? project.stills : project.makingOf) : [];
 
       const getHeroLink = () => {
@@ -357,7 +369,12 @@
                 <button onClick={(e) => { e.stopPropagation(); setGalleryState(prev => ({ ...prev, index: (prev.index + 1) % activeGallery.length })); }} className="w-full h-full text-[10px] uppercase tracking-[0.3em] font-bold text-white/30 hover:text-white transition-all">Siguiente</button>
               </div>
               <div className="relative max-w-5xl w-full flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
-                <img key={activeGallery[galleryState.index]} src={`https://lh3.googleusercontent.com/d/${activeGallery[galleryState.index]}`} className="max-h-[80vh] w-auto shadow-2xl rounded object-contain" />
+                <img 
+                  key={activeGallery[galleryState.index]} 
+                  src={`https://lh3.googleusercontent.com/d/${activeGallery[galleryState.index]}`} 
+                  className="max-h-[80vh] w-auto shadow-2xl rounded object-contain" 
+                  alt={lang === 'es' ? `Fotograma de producción de la obra ${project.title}` : `Behind the scenes still from ${project.title}`}
+                />
                 <div className="absolute -bottom-10 left-0 right-0 text-center text-white/40 text-[9px] uppercase tracking-[1em] font-bold">{galleryState.type.toUpperCase()} 0{galleryState.index + 1} / 0{activeGallery.length}</div>
               </div>
               <button onClick={(e) => { e.stopPropagation(); setGalleryState({ index: null, type: 'stills' }); }} className="absolute top-8 right-8 text-white/50 hover:text-white transition-all p-3 z-[550]"><CloseIcon size={24}/></button>
@@ -370,7 +387,11 @@
                 <iframe src={project.trailerUrl} className="w-full h-full" frameBorder="0" allow="autoplay; fullscreen; picture-in-picture" allowFullScreen></iframe>
               ) : (
                 <>
-                  <img src={project.heroImage || project.poster} alt={project.title} className="w-full h-full object-cover grayscale opacity-40 transition-transform duration-[2s] hover:scale-105" />
+                  <img 
+                    src={project.heroImage || project.poster} 
+                    alt={lang === 'es' ? `Imagen destacada del proyecto: ${project.title}` : `Hero screenshot of the film: ${project.title}`} 
+                    className="w-full h-full object-cover grayscale opacity-40 transition-transform duration-[2s] hover:scale-105" 
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
                   {heroLink && (
                     <a href={heroLink} target="_blank" rel="noopener noreferrer" className="group absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 p-8 rounded-full border border-white/20 hover:border-white transition-all bg-black/40 backdrop-blur-sm shadow-2xl">
@@ -389,7 +410,11 @@
           <div className="max-w-7xl mx-auto px-6 py-20 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 text-left">
             <div className="lg:col-span-4 space-y-8">
               <div className="border border-neutral-200 p-2 bg-white shadow-xl rounded-lg">
-                <img src={project.poster} className="w-full h-auto grayscale hover:grayscale-0 transition-all duration-[1.2s] rounded" />
+                <img 
+                  src={project.poster} 
+                  alt={lang === 'es' ? `Póster oficial de la película ${project.title}` : `Official movie poster for ${project.title}`} 
+                  className="w-full h-auto grayscale hover:grayscale-0 transition-all duration-[1.2s] rounded" 
+                />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 {project.stills && (
@@ -407,7 +432,6 @@
                 <p className="text-xl md:text-2xl text-neutral-800 font-light leading-relaxed">"{project.description}"</p>
               </div>
               
-              {/* Créditos en orden solicitado: Dirección, Guion, Producción, Producción Ejecutiva, DOP, Casa, País, Año, Género, Duración, Color */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 pt-8 border-t border-neutral-200 text-xs uppercase tracking-widest text-neutral-600 font-medium">
                 {project.director && <p><span className="text-neutral-400 font-bold block text-[9px] tracking-widest mb-1">{t.project.director}</span> {project.director}</p>}
                 {project.screenplay && <p><span className="text-neutral-400 font-bold block text-[9px] tracking-widest mb-1">{t.project.screenplay}</span> {project.screenplay}</p>}
@@ -544,7 +568,10 @@
       return (
         <div className="bg-white min-h-screen pt-36 pb-24 text-left">
           <div className="max-w-7xl mx-auto px-6">
-            <h2 className="text-4xl md:text-7xl uppercase tracking-tighter italic font-light mb-16 text-black">{lang === 'es' ? 'CATÁLOGO DE RENTA' : 'RENTAL CATALOG'}</h2>
+            {/* H2 semántico para el catálogo de renta */}
+            <h2 className="text-4xl md:text-7xl uppercase tracking-tighter italic font-light mb-16 text-black">
+              {lang === 'es' ? 'Renta de Equipo de Filmación' : 'Film Equipment Rental'}
+            </h2>
             <div className="space-y-2 border-t border-neutral-200">
               {rentaData.map((cat, i) => (
                 <div key={i} className="border-b border-neutral-200">
@@ -558,14 +585,19 @@
                         <div key={idx} className={`flex flex-col border p-6 transition-all rounded-lg group ${item.isSpecial ? 'border-black bg-neutral-50 shadow-md' : 'border-neutral-100 hover:bg-neutral-50'}`}>
                           <div className="aspect-video bg-neutral-50 overflow-hidden relative p-4 flex items-center justify-center rounded">
                             {item.img && (
-                              <img src={`https://lh3.googleusercontent.com/d/${item.img}`} alt={item.name} className="w-full h-full object-contain grayscale group-hover:grayscale-0 transition-all" />
+                              <img 
+                                src={`https://lh3.googleusercontent.com/d/${item.img}`} 
+                                alt={lang === 'es' ? `Alquiler y renta de equipo: ${item.name}` : `Cinematography gear rental: ${item.name}`} 
+                                className="w-full h-full object-contain grayscale group-hover:grayscale-0 transition-all" 
+                              />
                             )}
                             {item.isSpecial && (
                               <div className="absolute top-4 left-4 bg-black text-white px-3 py-1 text-[8px] tracking-[0.3em] font-bold uppercase rounded">Convenio Atomica</div>
                             )}
                           </div>
                           <div className="mt-6 space-y-4">
-                            <h4 className="text-lg md:text-xl uppercase tracking-tight font-bold text-black">{item.name}</h4>
+                            {/* H3 semántico para cada artículo de renta */}
+                            <h3 className="text-lg md:text-xl uppercase tracking-tight font-bold text-black">{item.name}</h3>
                             <p className="text-xs text-neutral-500 h-12 overflow-hidden leading-relaxed">{item.desc}</p>
                             <div className="pt-4 border-t border-neutral-100 flex flex-wrap gap-4 justify-between items-center">
                               <span className="text-lg font-bold text-neutral-900">{item.price}</span>
@@ -598,6 +630,7 @@
         <div className="max-w-7xl mx-auto px-6">
           <div className="mb-16">
             <span className="text-[10px] uppercase tracking-[0.5em] text-neutral-400 block mb-2 font-bold">{t.contacto.subtitle}</span>
+            {/* H2 para el buzón y canales directos */}
             <h2 className="text-4xl md:text-7xl uppercase tracking-tighter italic font-light text-black">{t.nav.contacto}</h2>
           </div>
           
@@ -641,16 +674,24 @@
       </div>
     );
 
-    const HomeView = ({ t, categories, setView }) => (
+    const HomeView = ({ t, categories, setView, lang }) => (
       <div className="animate-in fade-in duration-1000">
+        {/* Hero de Demo Reel Central */}
         <section className="h-[55vh] flex flex-col justify-center items-center text-center px-6 bg-white relative select-none">
           <span className="text-[10px] uppercase tracking-[0.8em] text-neutral-400 block mb-4 font-bold">{t.home.subtitle}</span>
+          
+          {/* H1 Semántico visible y estilizado para el portafolio cinematográfico principal */}
           <h1 className="text-5xl md:text-7xl uppercase tracking-tighter text-black leading-none mb-8 font-black">
             {t.home.title} <span className="italic font-light text-neutral-400">{t.home.distortion}</span>.
           </h1>
           <div className="w-px h-16 bg-neutral-300"></div>
         </section>
 
+        {/* Sistema de Visualización de Películas: Acordeón Cinematográfico de 5 Paneles Interactivos */}
+        {/* H2 semántico estructural oculto para buscadores y lectores de pantalla */}
+        <h2 className="sr-only">
+          {lang === 'es' ? 'Nuestro Portafolio: Largometrajes, Cortometrajes, Videoclips y Series' : 'Our Film Portfolio: Feature Films, Short Films, Music Videos and Series'}
+        </h2>
         <section className="h-[75vh] flex flex-col md:flex-row w-full bg-black overflow-hidden border-t border-b border-neutral-800 select-none">
           {categories.map((cat) => (
             <div 
@@ -658,13 +699,19 @@
               className="group relative flex-1 hover:flex-[4] transition-all duration-[900ms] border-b md:border-b-0 md:border-r border-neutral-800 last:border-r-0 last:border-b-0 cursor-pointer overflow-hidden bg-neutral-900" 
               onClick={() => { setView(cat.id); window.scrollTo(0,0); }}
             >
+              {/* Imagen del poster dinámico como fondo con alt descriptivo */}
               <div className="absolute inset-0 z-0 opacity-40 group-hover:opacity-100 transition-all duration-1000">
-                <img src={cat.img} className="w-full h-full object-cover grayscale group-hover:grayscale-0 scale-105 group-hover:scale-100 transition-transform duration-1000" />
+                <img 
+                  src={cat.img} 
+                  alt={lang === 'es' ? `Categoría del portafolio: ${cat.name}` : `Portfolio Category: ${cat.name}`}
+                  className="w-full h-full object-cover grayscale group-hover:grayscale-0 scale-105 group-hover:scale-100 transition-transform duration-1000" 
+                />
               </div>
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent pointer-events-none"></div>
               
               <div className="relative z-10 h-full flex flex-col justify-end items-start p-6 md:p-10 text-left">
                 <div className="transform md:group-hover:-translate-y-2 transition-transform duration-500">
+                  {/* H3 para cada sección del acordeón de portafolio */}
                   <h3 className="text-xl md:text-3xl uppercase tracking-tighter font-black text-white leading-none">{cat.name}</h3>
                 </div>
               </div>
@@ -673,6 +720,8 @@
         </section>
       </div>
     );
+
+    // COMPONENTE PRINCIPAL DE LA APLICACIÓN
 
     const App = () => {
       const [view, setView] = useState('home'); 
@@ -839,7 +888,7 @@
             'Selección Oficial FKMCine de Coruña, España, 2015.', 
             'Selección MEDIANOCHE Festival Del Nuevo Cine Latinoamericano de La Habana Cuba, 2015.',
             'Película Inaugural Festival Ícaro Guatemala 2014.',
-            'Ganador Haciendo Insidera Festival Ícaro 2013.' ] : [
+            'Ganador Haciendo Industria Festival Ícaro 2013.' ] : [
             'Official Selection Chicago Latino Film Festival 2015.',
             'Official Selection Latin American and Caribbean Film Festival, Margarita Venezuela 2015.',
             'Official Selection Mórbido Fest, Puebla Mexico 2015.',
@@ -847,7 +896,7 @@
             'Official Selection FKMCine, Coruña Spain, 2015.',
             'MIDNIGHT Selection New Latin American Film Festival, Havana Cuba, 2015.',
             'Opening Film Festival Ícaro Guatemala 2014.',
-            'Winner Haciendo Insidera Festival Ícaro 2013.']
+            'Winner Haciendo Industria Festival Ícaro 2013.']
         },
         {
           id: 'ergonomia',
@@ -1333,6 +1382,15 @@
 
       return (
         <div className="bg-white min-h-screen relative text-black font-sans">
+          
+          {/* H1 ESTRUCTURAL OCULTO (Screen-Reader / Googlebot Only) */}
+          {/* Esto le da a los indexadores el contexto semántico supremo de toda la SPA */}
+          <h1 className="sr-only">
+            {lang === 'es' 
+              ? "Aberración Óptica | Productora Audiovisual, Cine Independiente y Renta de Equipo en México" 
+              : "Aberración Óptica | Audiovisual Production, Independent Cinema and Film Equipment Rental in Mexico"}
+          </h1>
+
           <Header 
             view={view} 
             setView={setView} 
@@ -1350,6 +1408,7 @@
             logoUrl={logoUrl} 
             t={t} 
             setSitemapOpen={setSitemapOpen} 
+            lang={lang}
           />
           <SitemapModal 
             sitemapOpen={sitemapOpen} 
@@ -1363,6 +1422,7 @@
                 t={t} 
                 categories={categories} 
                 setView={setView} 
+                lang={lang}
               />
             )}
             {['largos', 'cortos', 'videoclips', 'series', 'publicidad'].includes(view) && (
@@ -1373,6 +1433,7 @@
                 setSelectedProject={setSelectedProject}
                 setView={setView}
                 t={t}
+                lang={lang}
               />
             )}
             {view === 'project' && selectedProject && (
@@ -1382,6 +1443,7 @@
                 setGalleryState={setGalleryState}
                 setView={setView}
                 t={t}
+                lang={lang}
               />
             )}
             
@@ -1389,12 +1451,14 @@
                <div className="pt-36 px-6 max-w-7xl mx-auto min-h-screen text-left bg-white text-black">
                   <div className="mb-16">
                     <span className="text-[10px] uppercase tracking-[0.5em] text-neutral-400 block mb-2 font-bold">NUESTRAS CAPACIDADES</span>
+                    {/* H2 Semántico para Servicios */}
                     <h2 className="text-4xl md:text-7xl tracking-tighter italic font-light">{t.nav.servicios}</h2>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {serviciosData.map((s, i) => (
                       <div key={i} className="p-8 border border-neutral-100 flex flex-col justify-between bg-neutral-50 hover:bg-black hover:text-white transition-all duration-500 rounded-lg group">
                         <div className="space-y-4">
+                          {/* H3 Semántico para las tarjetas de servicios */}
                           <h3 className="text-lg uppercase font-bold tracking-tight text-neutral-900 group-hover:text-white transition-colors">{s.title}</h3>
                           <p className="text-xs text-neutral-500 group-hover:text-white/60 leading-relaxed transition-colors">{s.desc}</p>
                         </div>
@@ -1418,6 +1482,7 @@
                <div className="pt-36 px-6 max-w-7xl mx-auto min-h-screen text-left bg-white text-black">
                   <div className="mb-16">
                     <span className="text-[10px] uppercase tracking-[0.5em] text-neutral-400 block mb-2 font-bold">QUIÉNES SOMOS</span>
+                    {/* H2 Semántico para Nosotros */}
                     <h2 className="text-4xl md:text-7xl tracking-tighter italic font-light">{t.nav.nosotros}</h2>
                   </div>
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
@@ -1426,11 +1491,12 @@
                     </div>
                     <div className="space-y-8 border-t border-neutral-100 pt-8 lg:border-t-0 lg:pt-0">
                        <div className="space-y-2">
-                          <span className="text-[10px] uppercase tracking-[0.4em] text-neutral-400 block font-bold">{lang === 'es' ? 'Misión' : 'Mission'}</span>
+                          {/* H3 para metas de la productora */}
+                          <h3 className="text-[10px] uppercase tracking-[0.4em] text-neutral-400 block font-bold">{lang === 'es' ? 'Misión' : 'Mission'}</h3>
                           <p className="text-sm text-neutral-600 leading-relaxed">{nosotrosData.mision}</p>
                        </div>
                        <div className="space-y-2 border-t border-neutral-100 pt-6">
-                          <span className="text-[10px] uppercase tracking-[0.4em] text-neutral-400 block font-bold">{lang === 'es' ? 'Visión' : 'Vision'}</span>
+                          <h3 className="text-[10px] uppercase tracking-[0.4em] text-neutral-400 block font-bold">{lang === 'es' ? 'Visión' : 'Vision'}</h3>
                           <p className="text-sm text-neutral-600 leading-relaxed">{nosotrosData.vision}</p>
                        </div>
                     </div>
@@ -1439,7 +1505,8 @@
                   <div className="mt-20 pt-16 border-t border-neutral-200 grid grid-cols-1 md:grid-cols-2 gap-12">
                     {nosotrosData.socios.map((s, i) => (
                       <div key={i} className="space-y-3 bg-neutral-50 p-6 rounded-lg border border-neutral-100">
-                        <h4 className="text-xl font-bold text-black">{s.name}</h4>
+                        {/* H3 Semántico para los fundadores */}
+                        <h3 className="text-xl font-bold text-black">{s.name}</h3>
                         <span className="text-[9px] uppercase tracking-[0.3em] text-neutral-400 block font-bold">{s.role}</span>
                         <p className="text-xs text-neutral-600 leading-relaxed">
                           {s.bio.split("Sitio web:")[0]}
@@ -1458,7 +1525,11 @@
           <footer className="bg-black text-white py-16 px-6 border-t border-neutral-900 mt-24">
             <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
               <div className="space-y-4 text-center md:text-left">
-                <img src={logoUrl} alt="Aberración Óptica" className="h-8 invert opacity-50 mx-auto md:mx-0 object-contain" />
+                <img 
+                  src={logoUrl} 
+                  alt={lang === 'es' ? "Logotipo oficial Aberración Óptica" : "Aberración Óptica official logo"} 
+                  className="h-8 invert opacity-50 mx-auto md:mx-0 object-contain" 
+                />
                 <p className="text-[10px] uppercase tracking-[0.3em] text-neutral-500">
                   {lang === 'es' ? 'Estudio de Cine Independiente y Distorsión Narrativa.' : 'Independent Cinema Studio & Narrative Distortion.'}
                 </p>

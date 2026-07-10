@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="[http://www.sitemaps.org/schemas/sitemap/0.9](http://www.sitemaps.org/schemas/sitemap/0.9)">
-
-  <!-- Página de Inicio Única (Abarca todo tu contenido) -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>[https://www.aberracionoptica.com.mx/](https://www.aberracionoptica.com.mx/)</loc>
+    <loc>https://www.aberracionoptica.com.mx/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
-
 </urlset>
